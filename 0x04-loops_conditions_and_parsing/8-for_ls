@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# prints the list of contents in cwd
+for file in *; do
+    if [ -f "$file" ] && [ "${file:0:1}" != "." ]; then
+        echo "${file#*-}"
+    fi
+done
