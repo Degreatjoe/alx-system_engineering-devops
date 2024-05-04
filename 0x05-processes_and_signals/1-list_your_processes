@@ -1,3 +1,9 @@
 #!/usr/bin/env bash
 # currently running process
-ps aux
+
+
+# Use ps to list all processes, displaying PID, PPID, user, and command
+# ps command options:
+# -e: Select all processes.
+# --forest: Display processes in a hierarchical/tree format
+ps -e aux
