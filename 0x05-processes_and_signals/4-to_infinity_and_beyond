@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # indefinite looop
+echo "$$" > pid
 i=0
 until [ $i -eq 1 ];
 do
