@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# indefinite looop
+i=0
+until [ $i -eq 1 ]; do
+echo "To infinity and beyond"; done
