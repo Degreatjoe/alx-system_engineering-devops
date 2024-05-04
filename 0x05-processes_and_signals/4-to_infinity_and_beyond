@@ -6,4 +6,9 @@ until [ $i -eq 1 ];
 do
 echo "To infinity and beyond";
 sleep 2;
+    if [ -e stop_4_to_infinity.signal ]; then
+        echo "Terminated"
+        rm stop_4_to_infinity.signal
+        exit 0
+    fi
 done

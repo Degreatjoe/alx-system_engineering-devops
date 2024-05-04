@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# another method to kill
+touch stop_4_to_infinity.signal
