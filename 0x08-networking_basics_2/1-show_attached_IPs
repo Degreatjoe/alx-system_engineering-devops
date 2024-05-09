@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Get all network interfaces
+interfaces=$(ip -o link show | awk -F': ' '{print $2}')
+
+# Iterate through each interface
+for interface in $interfaces; do
+    # Get IPv4 addresses for the interface
+    ipv4_addresses=$(ip -o -4 addr show "$interface" | awk '{print $4}')
+    
+    # Print interface name and its IPv4 addresses
+    if [[ -n $ipv4_addresses ]]; then
+        echo "$ipv4_addresses"
+    fi
+done
