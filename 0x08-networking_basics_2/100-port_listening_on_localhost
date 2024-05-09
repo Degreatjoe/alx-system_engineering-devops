@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 # Define the port number
 PORT=98
 
