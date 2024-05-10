@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# change etc/host
+cp /etc/hosts ~/hosts.new
+# sed ... ~/hosts.new
+echo 127.0.0.2 > ~/hosts.new
+echo 8.8.8.8 >> ~/hosts.new
+cp -f ~/hosts.new /etc/hosts
