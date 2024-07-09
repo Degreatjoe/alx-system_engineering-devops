@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# This script installs and configures Nginx to redirect /redirect_me to another page
+# This script installs and configures Nginx to have a custom 404 page
 
 # Update the package list
 sudo apt update -y
@@ -14,7 +14,10 @@ sudo sed -i 's/listen \[::\]:80 default_server;/listen \[::\]:80;/' /etc/nginx/s
 # Backup the current configuration file
 sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
 
-# Configure Nginx to set up the redirection
+# Create a custom 404 page
+echo "Ceci n'est pas une page" | sudo tee /var/www/html/custom_404.html
+
+# Configure Nginx to use the custom 404 page
 sudo bash -c 'cat > /etc/nginx/sites-available/default' << EOF
 server {
     listen 80;
