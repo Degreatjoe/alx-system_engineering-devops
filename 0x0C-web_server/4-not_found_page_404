@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# This script installs and configures Nginx to redirect /redirect_me to another page
+
+# Update the package list
+sudo apt update -y
+
+# Install Nginx
+sudo apt install -y nginx
+
+# Ensure Nginx is listening on port 80
+sudo sed -i 's/listen 80 default_server;/listen 80;/' /etc/nginx/sites-available/default
+sudo sed -i 's/listen \[::\]:80 default_server;/listen \[::\]:80;/' /etc/nginx/sites-available/default
+
+# Backup the current configuration file
+sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
+
+# Configure Nginx to set up the redirection
+sudo bash -c 'cat > /etc/nginx/sites-available/default' << EOF
+server {
+    listen 80;
+    listen [::]:80;
+
+    server_name _;
+
+    location /redirect_me {
+        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+    }
+
+    location / {
+        try_files \$uri \$uri/ =404;
+    }
+
+    error_page 404 /custom_404.html;
+    location = /custom_404.html {
+        internal;
+    }
+}
+EOF
+
+# Restart Nginx to apply the changes
+sudo service nginx restart
+
+# Ensure Nginx starts on boot
+sudo systemctl enable nginx
