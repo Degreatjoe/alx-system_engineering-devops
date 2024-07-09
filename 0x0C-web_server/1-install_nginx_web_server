@@ -2,7 +2,7 @@
 # This script installs and configures Nginx to return "Hello World!" at the root URL
 
 # Update the package list
-sudo apt update
+sudo apt update -y
 
 # Install Nginx
 sudo apt install -y nginx
