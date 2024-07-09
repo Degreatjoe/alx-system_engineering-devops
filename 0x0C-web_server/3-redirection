@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 # This script installs and configures Nginx to redirect /redirect_me to another page
 
 # Update the package list
