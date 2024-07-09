@@ -33,8 +33,4 @@ server {
 EOF
 
 # Reload Nginx configuration without using systemctl
-# sudo nginx -s reload
 sudo service nginx restart
-
-# Ensure Nginx starts on boot
-# sudo update-rc.d nginx defaults
