@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# This script installs and configures Nginx to return "Hello World!" at the root URL
+# This script installs and configures Nginx to redirect /redirect_me to another page
 
 # Update the package list
 sudo apt update -y
@@ -8,11 +8,11 @@ sudo apt update -y
 sudo apt install -y nginx
 
 # Ensure Nginx is listening on port 80
-sudo sed -i 's/listen 80 default_server;/listen 80;/'/etc/nginx/sites-available/default
+sudo sed -i 's/listen 80 default_server;/listen 80;/' /etc/nginx/sites-available/default
 sudo sed -i 's/listen \[::\]:80 default_server;/listen \[::\]:80;/' /etc/nginx/sites-available/default
 
-# Replace the default page with "Hello World!"
-echo "Hello World!" | sudo tee /var/www/html/index.html
+# Backup the current configuration file
+sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
 
 # Configure Nginx to set up the redirection
 sudo bash -c 'cat > /etc/nginx/sites-available/default' << EOF
@@ -32,5 +32,8 @@ server {
 }
 EOF
 
-# Reload Nginx configuration without using systemctl
+# Restart Nginx to apply the changes
 sudo service nginx restart
+
+# Ensure Nginx starts on boot
+sudo systemctl enable nginx
