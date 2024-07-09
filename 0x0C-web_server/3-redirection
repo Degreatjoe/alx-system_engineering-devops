@@ -33,7 +33,6 @@ server {
 EOF
 
 # Restart Nginx to apply the changes
-sudo service nginx restart
-
+sudo nginx -s stop
 # Ensure Nginx starts on boot
-# sudo systemctl enable nginx
+sudo nginx
