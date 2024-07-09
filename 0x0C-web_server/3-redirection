@@ -27,7 +27,7 @@ server {
     }
 
     location / {
-        try_files \$uri \$uri/ =301;
+        try_files \$uri \$uri/ =404;
     }
 }
 EOF
@@ -36,4 +36,4 @@ EOF
 sudo service nginx restart
 
 # Ensure Nginx starts on boot
-# sudo systemctl enable nginx
+sudo systemctl enable nginx
