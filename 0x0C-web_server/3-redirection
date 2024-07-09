@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 # This script installs and configures Nginx to redirect /redirect_me to another page
 
 # Update the package list
@@ -36,4 +36,4 @@ EOF
 sudo service nginx restart
 
 # Ensure Nginx starts on boot
-sudo systemctl enable nginx
+# sudo systemctl enable nginx
