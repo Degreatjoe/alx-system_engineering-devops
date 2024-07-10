@@ -1,0 +1,5 @@
+sudo docker exec -it a44cb59488b1 /bin/bashapt update
+apt install -y apache2
+echo "Hello Holberton" > /var/www/html/index.html
+service apache2 start
+exit
