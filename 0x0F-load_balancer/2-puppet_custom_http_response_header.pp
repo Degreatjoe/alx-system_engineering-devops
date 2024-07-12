@@ -1,47 +1,47 @@
 # 2-puppet_custom_http_response_header.pp
-# This manifest installs Nginx and configures a custom HTTP response header
 
-# Ensure the Nginx package is installed
+# Install Nginx package
 package { 'nginx':
-  ensure => installed,
+    ensure => installed,
 }
 
-# Ensure the Nginx service is enabled and running
-service { 'nginx':
-  ensure     => running,
-  enable     => true,
-  subscribe  => File['/etc/nginx/sites-available/default'],
-}
+# Define a class to manage custom HTTP header configuration
+class custom_http_response_header {
+    
+    # Define $hostname variable with the actual server's hostname
+    $hostname = $facts['hostname']
 
-# Get the hostname of the server
-$hostname = $facts['networking']['hostname']
-
-# Configure Nginx to add the custom header
-file { '/etc/nginx/sites-available/default':
-  ensure  => file,
-  content => template('nginx/default.erb'),
-  notify  => Service['nginx'],
-}
-
-# Template for Nginx configuration
-file { '/etc/puppetlabs/code/environments/production/modules/nginx/templates/default.erb':
-  ensure  => file,
-  content => @("EOF"),
-server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
-
-    root /var/www/html;
-    index index.html index.htm index.nginx-debian.html;
-
-    server_name _;
-
-    location / {
-        try_files \$uri \$uri/ =404;
+    # Nginx configuration template inline
+    file { '/etc/nginx/sites-available/default':
+        ensure  => present,
+        content => @(EOH)
+            server {
+                listen 80 default_server;
+                listen [::]:80 default_server;
+            
+                server_name _;
+            
+                location / {
+                    # Set X-Served-By header based on the server's hostname
+                    add_header X-Served-By <%= $hostname %>;
+                    
+                    # Other configuration directives as needed
+                    ...
+                }
+            
+                # Additional server blocks or configurations as needed
+            }
+        EOH
+        notify  => Service['nginx'],
     }
-
-    # Custom header
-    add_header X-Served-By <%= @hostname %>;
 }
-  | EOF
+
+# Apply the class
+include custom_http_response_header
+
+# Enable and start Nginx service
+service { 'nginx':
+    ensure  => running,
+    enable  => true,
+    require => Package['nginx'],
 }
