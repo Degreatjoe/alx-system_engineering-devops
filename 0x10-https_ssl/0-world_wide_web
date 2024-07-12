@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# Function to retrieve DNS information for a subdomain
+get_dns_info() {
+    domain="$1"
+    subdomain="$2"
+    
+    if [ -z "$subdomain" ]; then
+        subdomains=("www" "lb-01" "web-01" "web-02")
+    else
+        subdomains=("$subdomain")
+    fi
+
+    for sub in "${subdomains[@]}"; do
+        result=$(dig "$sub.$domain" +short)
+
+        if [ -n "$result" ]; then
+            record_type=$(dig "$sub.$domain" | awk '/ANSWER SECTION:/ { getline; print $4 }')
+            echo "The subdomain $sub is a $record_type record and points to $result"
+        fi
+    done
+}
+
+# Main script logic
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 domain [subdomain]"
+    exit 1
+fi
+
+domain="$1"
+subdomain="$2"
+
+get_dns_info "$domain" "$subdomain"
