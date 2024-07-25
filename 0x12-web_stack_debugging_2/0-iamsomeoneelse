@@ -11,4 +11,4 @@ fi
 USERNAME=$1
 
 # Run whoami as the specified user
-sudo -u $USERNAME whoami
+sudo -u "$USERNAME" whoami
