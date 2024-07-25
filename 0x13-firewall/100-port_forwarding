@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # first, make a copy
 sudo cp /etc/ufw/before.rules /etc/ufw/before.rules.bak
 # add the necessary lines
