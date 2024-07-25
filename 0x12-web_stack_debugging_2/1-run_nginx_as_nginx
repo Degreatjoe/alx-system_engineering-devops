@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# configures an nginx to load as a user and not a root.
+
+# Ensure the script is run as root
+if [ "$(id -u)" -ne 0 ]; then
+    echo "This script must be run as root" >&2
+    exit 1
+fi
+
+# Update the nginx configuration to run as the nginx user
+sed -i 's/^user .*/user nginx;/' /etc/nginx/nginx.conf
+
+# Update the nginx configuration to listen on port 8080
+sed -i 's/listen 80;/listen 8080;/' /etc/nginx/sites-available/default
+sed -i 's/listen \[::\]:80;/listen [::]:8080;/' /etc/nginx/sites-available/default
+
+# Create the nginx user if it does not exist
+if ! id -u nginx > /dev/null 2>&1; then
+    useradd -r nginx
+fi
+
+# Ensure the correct permissions are set
+chown -R nginx:nginx /var/log/nginx
+chown -R nginx:nginx /var/lib/nginx
+chown -R nginx:nginx /var/www/html
+
+# Restart Nginx to apply changes
+service nginx restart
