@@ -1,0 +1,10 @@
+# first, make a copy
+sudo cp /etc/ufw/before.rules /etc/ufw/before.rules.bak
+# add the necessary lines
+sudo sed -i '/^*filter/i *nat\n:PREROUTING ACCEPT [0:0]\n-A PREROUTING -p tcp --dport 8080 -j REDIRECT --to-port 80\nCOMMIT' /etc/ufw/before.rules
+# restart ufw
+sudo ufw disable
+sudo ufw enable
+
+# confirm
+sudo iptables -t nat -L
