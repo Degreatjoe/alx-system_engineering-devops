@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# accepts one arguement and prints the whoami under the arguement
+
+# Check if exactly one argument is provided
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <username>"
+    exit 1
+fi
+
+# Get the username from the argument
+USERNAME=$1
+
+# Run whoami as the specified user
+sudo -u $USERNAME whoami
