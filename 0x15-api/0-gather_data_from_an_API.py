@@ -13,8 +13,8 @@ Requirements:
 """
 
 import json
-import urllib.request
 import sys
+import urllib.request
 
 
 def get_employee_todo_list(employee_id):
