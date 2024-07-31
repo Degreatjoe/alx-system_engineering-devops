@@ -1,10 +1,11 @@
 #!/usr/bin/python3
-
+""" to get an employee todo list"""
 import sys
 import requests
 
 
 def get_employee_todo_list(employee_id):
+    """The get employee function"""
     # Base URL for the API
     base_url = "https://jsonplaceholder.typicode.com"
 
