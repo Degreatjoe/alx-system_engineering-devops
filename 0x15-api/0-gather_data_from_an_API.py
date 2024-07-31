@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """ to get an employee todo list"""
-import sys
 import requests
+import sys
 
 
 def get_employee_todo_list(employee_id):
