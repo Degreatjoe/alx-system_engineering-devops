@@ -1,68 +1,34 @@
 #!/usr/bin/python3
 """
-A script to fetch and display the TODO list progress for a given employee ID.
-The script uses the urllib module to access the REST API and outputs the
-in a specific format.
+Returns to-do list information for a given employee ID.
 
-Requirements:
-- Use the urllib module
-- Accept an integer as a parameter (employee ID)
-- Display the employee's TODO list progress in the format:
-  "Employee EMPLOYEE_NAME is done with tasks(NUMBER_OF_DONE
-  Followed by the titles of completed tasks, each preceded by a tab and space.
+This script takes an employee ID as a command-line argument and fetches
+the corresponding user information and to-do list from the JSONPlaceholder API.
+It then prints the tasks completed by the employee.
 """
 
-import json
+import requests
 import sys
-import urllib.request
-
-
-def get_employee_todo_list(employee_id):
-    """
-    Fetch and display the TODO list progress of the specified employee.
-
-    Args:
-    employee_id (int): The ID of the employee.
-
-    Returns:
-    None
-    """
-    # Base URL for the API
-    base_url = "https://jsonplaceholder.typicode.com"
-
-    try:
-        # Fetch employee information
-        with urllib.request.urlopen(f"{base_url}/users/{employee_id}")\
-             as response:
-            user = json.loads(response.read().decode())
-            employee_name = user.get("name")
-
-        # Fetch employee's TODO list
-        with urllib.request.urlopen(f"{base_url}/todos?userId={employee_id}")\
-             as response:
-            todos = json.loads(response.read().decode())
-            total_tasks = len(todos)
-            done_tasks = [todo for todo in todos if todo.get("completed")]
-
-            number_of_done_tasks = len(done_tasks)
-    except urllib.error.URLError as e:
-        print(f"Error fetching data: {e}")
-        return
-
-    # Output the required information
-    print(f"Employee {employee_name} is done with tasks\
-          ({number_of_done_tasks}/{total_tasks}):")
-    for task in done_tasks:
-        print(f"\t {task.get('title')}")
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python3 0-gather_data_from_an_API.py <employee_id>")
-        sys.exit(1)
+    # Base URL for the JSONPlaceholder API
+    url = "https://jsonplaceholder.typicode.com/"
 
-    try:
-        employee_id = int(sys.argv[1])
-        get_employee_todo_list(employee_id)
-    except ValueError:
-        print("Please provide a valid integer for the employee ID.")
+    # Get the employee information using the provided employee ID
+    employee_id = sys.argv[1]
+    user = requests.get(url + "users/{}".format(employee_id)).json()
+
+    # Get the to-do list for the employee using the provided employee ID
+    params = {"userId": employee_id}
+    todos = requests.get(url + "todos", params).json()
+
+    # Filter completed tasks and count them
+    completed = [t.get("title") for t in todos if t.get("completed") is True]
+
+    # Print the employee's name and the number of completed tasks
+    print("Employee {} is done with tasks({}/{}):".format(
+        user.get("name"), len(completed), len(todos)))
+
+    # Print the completed tasks one by one with indentation
+    [print("\t {}".format(complete)) for complete in completed]
