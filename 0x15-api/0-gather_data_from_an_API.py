@@ -1,36 +1,53 @@
 #!/usr/bin/python3
-""" to get an employee todo list"""
-import requests
+"""
+A script to fetch and display the TODO list progress for a given employee ID.
+The script uses the urllib module to access the REST API and outputs the
+in a specific format.
+
+Requirements:
+- Use the urllib module
+- Accept an integer as a parameter (employee ID)
+- Display the employee's TODO list progress in the format:
+  "Employee EMPLOYEE_NAME is done with tasks(NUMBER_OF_DONE
+  Followed by the titles of completed tasks, each preceded by a tab and space.
+"""
+
+import json
+import urllib.request
 import sys
 
 
 def get_employee_todo_list(employee_id):
-    """The get employee function"""
+    """
+    Fetch and display the TODO list progress of the specified employee.
+
+    Args:
+    employee_id (int): The ID of the employee.
+
+    Returns:
+    None
+    """
     # Base URL for the API
     base_url = "https://jsonplaceholder.typicode.com"
 
-    # Fetch employee information
-    user_url = f"{base_url}/users/{employee_id}"
-    user_response = requests.get(user_url)
-    if user_response.status_code != 200:
-        print("Error fetching employee information")
+    try:
+        # Fetch employee information
+        with urllib.request.urlopen(f"{base_url}/users/{employee_id}")\
+             as response:
+            user = json.loads(response.read().decode())
+            employee_name = user.get("name")
+
+        # Fetch employee's TODO list
+        with urllib.request.urlopen(f"{base_url}/todos?userId={employee_id}")\
+             as response:
+            todos = json.loads(response.read().decode())
+            total_tasks = len(todos)
+            done_tasks = [todo for todo in todos if todo.get("completed")]
+
+            number_of_done_tasks = len(done_tasks)
+    except urllib.error.URLError as e:
+        print(f"Error fetching data: {e}")
         return
-
-    user = user_response.json()
-    employee_name = user.get("name")
-
-    # Fetch employee's TODO list
-    todos_url = f"{base_url}/todos?userId={employee_id}"
-    todos_response = requests.get(todos_url)
-    if todos_response.status_code != 200:
-        print("Error fetching TODO list")
-        return
-
-    todos = todos_response.json()
-    total_tasks = len(todos)
-    done_tasks = [todo for todo in todos if todo.get("completed")]
-
-    number_of_done_tasks = len(done_tasks)
 
     # Output the required information
     print(f"Employee {employee_name} is done with tasks\
